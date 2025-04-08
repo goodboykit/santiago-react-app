@@ -1,10 +1,11 @@
-function Button({ label, onClick }) {
-    return (
-      <button onClick={onClick}>
-        {label}
-      </button>
-    );
-  }
-  
-  export default Button;
-  
+import React from 'react';
+
+const Button = ({ children, onClick }) => {
+  return (
+    <button className="custom-button" onClick={onClick}>
+      {children}
+    </button>
+  );
+};
+
+export default Button;

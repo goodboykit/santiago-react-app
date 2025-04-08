@@ -1,13 +1,17 @@
-import Navbar from "../components/Navbar";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Navbar from './Navbar';
 
-function Layout({ children }) {
+function Layout() {
   return (
-    <div>
-      {/* Enhancement 3: Ensure navbar is always at the top */}
+    <>
+      {/* Persistent Navbar at the top */}
       <Navbar />
-      {/* The rest of the page content goes here */}
-      <main>{children}</main>
-    </div>
+      {/* Main content container (Outlet) */}
+      <div className="layout-container">
+        <Outlet />
+      </div>
+    </>
   );
 }
 

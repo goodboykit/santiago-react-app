@@ -1,13 +1,32 @@
+import React from 'react';
+
 function HomePage() {
-    return (
-      <div>
-        <h1>Welcome to My Site</h1>
-        {/* Enhancement 2: Add an image or relevant content */}
-        <p>This is a short introduction to the homepage. Here’s something interesting!</p>
-        <img src="path-to-image.jpg" alt="A descriptive alt text" />
+  return (
+    <div className="page home-page">
+      <div className="hero-section">
+        <h1 className="page-title">Kit Nicholas T. Santiago</h1>
+        <p className="page-subtitle">
+          3rd Year BS-IT Student | Specialized in Mobile & Web Apps
+        </p>
+        <img
+          className="page-image"
+          src="/src/assets/image1.png"
+          alt="Home Banner"
+        />
       </div>
-    );
-  }
-  
-  export default HomePage;
-  
+
+      <p className="page-content">
+        Welcome to my interactive landing page! I'm currently studying at
+        <strong> National University – Manila</strong>, focusing on building
+        dynamic mobile/web applications and engaging in collaborative tech
+        communities.
+      </p>
+      <p className="page-content">
+        <strong>Contact:</strong> santiagonikos@gmail.com | (+63) 956-896-4613 <br />
+        <strong>Location:</strong> 364 San Diego Street, Sampaloc, Manila
+      </p>
+    </div>
+  );
+}
+
+export default HomePage;
