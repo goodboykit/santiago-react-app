@@ -12,7 +12,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    errorElement: <NotFoundPage />, // handles unmatched routes
+    errorElement: <NotFoundPage />, 
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/about', element: <AboutPage /> },
