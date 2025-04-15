@@ -1,38 +1,31 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import articles from '../article-content.js'; 
+import '../styles/ArticlePage.css';
+
 
 function ArticlePage() {
-  const { id } = useParams();
-
-  const articleData = {
-    1: {
-      title: '1st Place – NU STEM Wizards Quiz Bee',
-      img: '/src/assets/quiz.png',
-      content: 'A university-level competition focusing on STEM fundamentals. Winning 1st place validated my strong academic foundation and rapid problem-solving.'
-    },
-    2: {
-      title: 'Top 3 – GDSC Ideathon',
-      img: '/src/assets/ideathon.png',
-      content: 'Collaborated with a team to build an innovative tech solution. Earned top 3 among many participants, showcasing creativity in problem-solving.'
-    },
-    3: {
-      title: 'Google I/O Extended Manila 2024',
-      img: '/src/assets/images.jpeg',
-      content: 'Attended advanced sessions on AI, Android, and web dev. Networked with fellow developers, gained new insights on community-driven innovations.'
-    }
-  };
-
-  const article = articleData[id];
+  const { name } = useParams(); 
+  const article = articles.find((article) => article.name === name);
 
   if (!article) {
-    return <div className="page"><h2 className="page-title">Article Not Found</h2></div>;
+    return (
+      <div className="page not-found">
+        <h1 className="page-title">Article Not Found</h1>
+        <p className="page-content">Sorry, we couldn't find the article you're looking for.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="page">
+    <div className="page article-page">
       <h1 className="page-title">{article.title}</h1>
-      <img className="page-image" src={article.img} alt={article.title} />
-      <p className="page-content">{article.content}</p>
+      <h2 className="page-subtitle">{article.name}</h2>
+      <div className="page-content">
+        {article.content.map((paragraph, index) => (
+          <p key={index} className="article-paragraph">{paragraph}</p>
+        ))}
+      </div>
     </div>
   );
 }
