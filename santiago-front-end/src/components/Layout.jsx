@@ -1,16 +1,21 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
+import Footer from './Footer'; // ✅ Import the Footer component
 
 function Layout() {
   return (
     <>
-      {/* Persistent Navbar at the top */}
+      {/* Persistent Navbar */}
       <Navbar />
-      {/* Main content container (Outlet) */}
-      <div className="layout-container">
+
+      {/* Page Content */}
+      <main className="layout-container">
         <Outlet />
-      </div>
+      </main>
+
+      {/* Persistent Footer */}
+      <Footer />
     </>
   );
 }

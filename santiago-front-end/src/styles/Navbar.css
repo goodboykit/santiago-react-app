@@ -1,44 +1,110 @@
+/* Navbar Container */
 .navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background-color: #1a237e; 
-  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Left: Brand Section */
+.navbar-brand {
   display: flex;
   align-items: center;
-  z-index: 999;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  gap: 0.75rem;
 }
 
-.navbar-logo img {
-  height: 45px;
-  cursor: pointer;
+.navbar-logo {
+  width: 36px;
+  height: 36px;
 }
 
+.navbar-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #3B4F81;
+}
+
+/* Center: Navigation Links */
 .navbar-links {
-  list-style: none;
   display: flex;
+  list-style: none;
   gap: 2rem;
-  margin-left: auto; 
-  margin-right: 10rem;
-}
-
-.navbar-links li {
   margin: 0;
 }
 
-.navbar-links li a {
-  color: #ffffff;
+.nav-link {
   text-decoration: none;
-  font-weight: 600;
+  color: #3B4F81;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  padding-bottom: 4px;
   transition: color 0.3s ease;
 }
 
-.navbar-links li a:hover {
-  color: #ffeb3b; /
+.nav-link:hover,
+.nav-link.active {
+  color: #1d3557;
 }
 
-.navbar-right {
-  margin-right: 10rem;
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #3B4F81;
+  border-radius: 4px;
+}
+
+/* Right: Login Button */
+.navbar-action {
+  display: flex;
+}
+
+.nav-button {
+  background-color: #3B4F81;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #2a3b73;
+}
+
+/* Responsive for smaller screens (optional) */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .navbar-action {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .nav-button {
+    width: 100%;
+    text-align: center;
+  }
 }

@@ -8,15 +8,6 @@ function ArticlePage() {
   const { name } = useParams(); 
   const article = articles.find((article) => article.name === name);
 
-  if (!article) {
-    return (
-      <div className="page not-found">
-        <h1 className="page-title">Article Not Found</h1>
-        <p className="page-content">Sorry, we couldn't find the article you're looking for.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="page article-page">
       <h1 className="page-title">{article.title}</h1>
