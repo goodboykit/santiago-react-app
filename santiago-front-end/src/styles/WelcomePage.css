@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.wp-dashboard {
+  background: #f4f6fa;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.wp-navbar {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.wp-logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3B4F81;
+}
+
+.wp-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6c7a8f;
+}
+
+.wp-avatar {
+  font-size: 1.8rem;
+  color: #FFA726;
+}
+
+.wp-username {
+  font-weight: 500;
+}
+
+/* Hero */
+.wp-hero {
+  position: relative;
+  background: #3B4F81;
+  color: white;
+  text-align: center;
+  padding: 4rem 1rem 6rem;
+  clip-path: polygon(0 0,100% 0,100% 85%,0 100%);
+}
+
+.wp-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+.wp-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeInDown 1s ease;
+}
+
+.wp-hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.wp-hero-content h1 span {
+  color: #FFA726;
+}
+
+.wp-hero-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Stats Cards */
+.wp-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: -4rem auto 2rem;
+  padding: 0 2rem;
+  animation: fadeInUp 1s ease 0.3s both;
+}
+
+.wp-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.wp-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.1);
+}
+
+.wp-icon {
+  font-size: 2rem;
+  color: #3B4F81;
+  margin-bottom: 0.75rem;
+}
+
+.wp-card h3 {
+  font-size: 1.2rem;
+  color: #3B4F81;
+  margin-bottom: 0.5rem;
+}
+
+.wp-card p {
+  color: #6c7a8f;
+  font-size: 0.95rem;
+}
+
+/* Recent Projects */
+.wp-recent {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+  animation: fadeInUp 1s ease 0.6s both;
+}
+
+.wp-recent h2 {
+  color: #3B4F81;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.wp-recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 1.5rem;
+}
+
+.wp-recent-card {
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  color: #3B4F81;
+  font-weight: 500;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.wp-recent-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wp-hero-content h1 { font-size: 2rem; }
+  .wp-hero-content p { font-size: 1rem; }
+}
+
+
+.wp-user-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wp-logout-btn {
+  background: #FFA726;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.wp-logout-btn:hover {
+  background: #fb8c00;
+}

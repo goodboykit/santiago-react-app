@@ -14,6 +14,8 @@ import NotFoundPage from './pages/NotFoundPage';
 // Auth Pages
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
+import LoadingPage from './components/LoadingPage';
+import WelcomePage from './pages/WelcomePage';
 
 const router = createBrowserRouter([
   {
@@ -46,7 +48,17 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <RegistrationPage />
+  },
+  {
+    path: '/loading',
+    element: <LoadingPage />
+  },
+  {
+    path: '/welcome',
+    element: <WelcomePage />
   }
+
+
 ]);
 
 function App() {

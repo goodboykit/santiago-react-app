@@ -1,88 +1,106 @@
 import React, { useState } from 'react';
-import Button from '../components/Button'; // Reuse same button as LoginPage
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import '../styles/RegistrationPage.css';
 
 function RegistrationPage() {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    console.log('Registration submitted:', {
-      fullName,
-      email,
-      password,
-      confirmPassword
-    });
+    console.log('Registration submitted:', formData);
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="fullName">Full Name:</label>
-          <input
-            type="text"
-            id="fullName"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-        </div>
+    <div className="registration-container">
+      <svg className="wave-bg" viewBox="0 0 1440 320">
+        <path
+          fill="#4C62A1"
+          fillOpacity="1"
+          d="M0,160L48,160C96,160,192,160,288,176C384,192,480,224,576,240C672,256,768,256,864,224C960,192,1056,128,1152,101.3C1248,75,1344,85,1392,90.7L1440,96V0H0Z"
+        />
+      </svg>
 
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+      <div className="registration-card">
+        <h2 className="registration-title">Create Your Account</h2>
+        <p className="registration-subtext">Join us and get started!</p>
 
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="registration-form">
+          <div className="input-wrapper">
+            <FontAwesomeIcon icon={faUser} className="form-icon" />
+            <input
+              type="text"
+              id="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder=" "
+              required
+            />
+            <label htmlFor="fullName">Full Name</label>
+          </div>
 
-        <div>
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
+          <div className="input-wrapper">
+            <FontAwesomeIcon icon={faEnvelope} className="form-icon" />
+            <input
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder=" "
+              required
+            />
+            <label htmlFor="email">Email Address</label>
+          </div>
 
-        <Button type="submit">Register</Button>
+          <div className="input-wrapper">
+            <FontAwesomeIcon icon={faLock} className="form-icon" />
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder=" "
+              required
+            />
+            <label htmlFor="password">Password</label>
+          </div>
 
-        <p style={{ marginTop: '1rem' }}>
-          Already have an account?{' '}
-          <span
-            style={{ color: '#3B4F81', cursor: 'pointer', fontWeight: 500 }}
-            onClick={() => navigate('/login')}
-          >
-            Login here
-          </span>
-        </p>
-      </form>
+          <div className="input-wrapper">
+            <FontAwesomeIcon icon={faLock} className="form-icon" />
+            <input
+              type="password"
+              id="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder=" "
+              required
+            />
+            <label htmlFor="confirmPassword">Confirm Password</label>
+          </div>
+
+          <button type="submit" className="btn-register">Register</button>
+
+          <p className="login-redirect">
+            Already have an account? <span onClick={() => navigate('/login')}>Login here</span>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
