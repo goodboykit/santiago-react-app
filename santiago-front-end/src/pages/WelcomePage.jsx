@@ -16,7 +16,6 @@ export default function WelcomePage() {
   const email = state?.email || 'guest@portfolio.com';
   const navigate = useNavigate();
 
-  // ✅ Define logout function ABOVE the return statement
   const handleLogout = () => {
     navigate('/');
   };
