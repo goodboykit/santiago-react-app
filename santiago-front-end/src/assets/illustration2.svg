@@ -1,0 +1,12 @@
+<!-- src/assets/illustration2.svg -->
+<svg width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#F3F6FD"/>
+  <circle cx="512" cy="512" r="280" fill="#3B4F81" opacity="0.08"/>
+  <rect x="320" y="400" width="384" height="240" rx="16" fill="#fff" stroke="#4C62A1" stroke-width="3"/>
+  <rect x="340" y="420" width="344" height="40" rx="8" fill="#DCE3F0"/>
+  <rect x="340" y="480" width="180" height="20" rx="5" fill="#4C62A1"/>
+  <rect x="340" y="510" width="220" height="20" rx="5" fill="#3B4F81"/>
+  <circle cx="512" cy="700" r="50" fill="#4C62A1"/>
+  <text x="360" y="465" font-family="Poppins" font-size="14" fill="#4C62A1">my-portfolio.html</text>
+  <text x="370" y="715" font-family="Poppins" font-size="16" fill="#fff">Login</text>
+</svg>

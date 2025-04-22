@@ -1,0 +1,8 @@
+<!-- src/assets/illustration3.svg -->
+<svg width="100%" height="100%" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#EEF2FB"/>
+  <circle cx="512" cy="512" r="260" fill="#3B4F81" opacity="0.1"/>
+  <path d="M340 480 C340 450, 360 430, 390 430 H500 L520 460 H640 C670 460, 690 480, 690 510 V600 C690 630, 670 650, 640 650 H390 C360 650, 340 630, 340 600Z" fill="#fff" stroke="#4C62A1" stroke-width="3"/>
+  <path d="M480 570 C480 550, 500 540, 512 540 C520 520, 540 510, 560 520 C580 510, 600 520, 600 540 C610 550, 620 560, 620 570 C620 590, 600 600, 570 600 H460 C440 600, 420 590, 420 570Z" fill="#4C62A1" opacity="0.8"/>
+  <text x="390" y="515" font-family="Poppins" font-size="16" fill="#4C62A1">File Repository</text>
+</svg>
