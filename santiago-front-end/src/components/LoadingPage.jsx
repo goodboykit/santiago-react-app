@@ -14,7 +14,7 @@ export default function LoadingPage() {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          navigate('/welcome', { state: { email } });
+          navigate('/dashboard', { state: { email } });
           return 100;
         }
         return prev + 1;

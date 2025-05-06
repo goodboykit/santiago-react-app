@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
-// Layout and Shared Components
+// Layouts
 import Layout from './components/Layout';
 import DashLayout from './components/DashLayout';
+import AuthLayout from './components/AuthLayout';
 
 // Public Pages
 import HomePage from './pages/LandingPages/HomePage';
@@ -16,8 +17,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 
-import AuthLayout from './components/AuthLayout';
-
+// Transition + Post-login
+import LoadingPage from './components/LoadingPage';
 
 // Dashboard Pages
 import DashboardPage from './pages/DashboardPages/DashboardPage';
@@ -34,13 +35,10 @@ const router = createBrowserRouter([
       { path: '/about', element: <AboutPage /> },
       { path: '/articles', element: <ArticleListPage /> },
       { path: '/articles/:name', element: <ArticlePage /> },
-
-      
       { path: '/login', element: <Navigate to="/auth/login" /> },
       { path: '/register', element: <Navigate to="/auth/register" /> },
     ],
   },
-
   {
     path: '/auth',
     element: <AuthLayout />,
@@ -49,7 +47,6 @@ const router = createBrowserRouter([
       { path: 'register', element: <RegistrationPage /> },
     ],
   },
-
   {
     path: '/dashboard',
     element: <DashLayout />,
@@ -59,7 +56,10 @@ const router = createBrowserRouter([
       { path: 'users', element: <UsersPage /> },
     ],
   },
-
+  {
+    path: '/loading',
+    element: <LoadingPage />,
+  },
 ]);
 
 function App() {
