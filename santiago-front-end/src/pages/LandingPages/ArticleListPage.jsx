@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import articles from '../article-content';
-import '../styles/ArticleList.css';
+import articles from '../../article-content';
+import '../../styles/ArticleList.css';
 
 function ArticleListPage() {
   return (

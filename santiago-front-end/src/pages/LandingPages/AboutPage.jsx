@@ -6,7 +6,7 @@ function AboutPage() {
       <h1 className="page-title">About Me & Community Work</h1>
       <img
         className="page-image"
-        src="/src/assets/about.png"
+        src="../src/assets/about.png"
         alt="About Section"
       />
 

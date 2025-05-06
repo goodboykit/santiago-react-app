@@ -1,21 +1,28 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
 // Layout and Shared Components
 import Layout from './components/Layout';
+import DashLayout from './components/DashLayout';
 
 // Public Pages
-import HomePage from './pages/Homepage';
-import AboutPage from './pages/AboutPage';
-import ArticleListPage from './pages/ArticleListPage';
-import ArticlePage from './pages/ArticlePage';
+import HomePage from './pages/LandingPages/HomePage';
+import AboutPage from './pages/LandingPages/AboutPage';
+import ArticleListPage from './pages/LandingPages/ArticleListPage';
+import ArticlePage from './pages/LandingPages/ArticlePage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Auth Pages
 import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
-import LoadingPage from './components/LoadingPage';
-import WelcomePage from './pages/WelcomePage';
+
+import AuthLayout from './components/AuthLayout';
+
+
+// Dashboard Pages
+import DashboardPage from './pages/DashboardPages/DashboardPage';
+import ReportsPage from './pages/DashboardPages/ReportsPage';
+import UsersPage from './pages/DashboardPages/UsersPage';
 
 const router = createBrowserRouter([
   {
@@ -23,50 +30,40 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <NotFoundPage />,
     children: [
-      {
-        path: '/',
-        element: <HomePage />
-      },
-      {
-        path: '/about',
-        element: <AboutPage />
-      },
-      {
-        path: '/articles',
-        element: <ArticleListPage />
-      },
-      {
-        path: '/articles/:name', 
-        element: <ArticlePage />
-      }
-    ]
-  },
-  {
-    path: '/login',
-    element: <LoginPage />
-  },
-  {
-    path: '/register',
-    element: <RegistrationPage />
-  },
-  {
-    path: '/loading',
-    element: <LoadingPage />
-  },
-  {
-    path: '/welcome',
-    element: <WelcomePage />
-  }
+      { path: '/', element: <HomePage /> },
+      { path: '/about', element: <AboutPage /> },
+      { path: '/articles', element: <ArticleListPage /> },
+      { path: '/articles/:name', element: <ArticlePage /> },
 
+      
+      { path: '/login', element: <Navigate to="/auth/login" /> },
+      { path: '/register', element: <Navigate to="/auth/register" /> },
+    ],
+  },
+
+  {
+    path: '/auth',
+    element: <AuthLayout />,
+    children: [
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegistrationPage /> },
+    ],
+  },
+
+  {
+    path: '/dashboard',
+    element: <DashLayout />,
+    children: [
+      { path: '', element: <DashboardPage /> },
+      { path: 'reports', element: <ReportsPage /> },
+      { path: 'users', element: <UsersPage /> },
+    ],
+  },
 
 ]);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
