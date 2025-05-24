@@ -16,7 +16,10 @@ import {
   CardContent,
   CardActions,
   Chip,
-  IconButton
+  IconButton,
+  Divider,
+  InputAdornment,
+  Avatar
 } from '@mui/material';
 import {
   Visibility as ViewIcon,
@@ -25,16 +28,20 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   Article as ArticleIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Category as CategoryIcon,
+  Public as PublicIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+  Title as TitleIcon,
+  Link as LinkIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import UserService from '../../services/UserService';
 
 const DashArticleListPage = () => {
-  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [dashboardArticles, setDashboardArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [modalMode, setModalMode] = useState('view'); // 'view', 'edit', 'add'
@@ -288,7 +295,7 @@ const DashArticleListPage = () => {
       {/* Header & Search */}
       <Grid container alignItems="center" justifyContent="space-between" mb={3}>
         <Box>
-          <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#3B4F81', fontWeight: 600 }}>
             <ArticleIcon /> Article Management
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -311,7 +318,7 @@ const DashArticleListPage = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => openModal('add')}
-              sx={{ bgcolor: '#1565c0' }}
+              sx={{ bgcolor: '#3B4F81' }}
             >
               Add Article
             </Button>
@@ -322,13 +329,13 @@ const DashArticleListPage = () => {
       {/* Stats Summary */}
       <Grid container spacing={2} mb={3}>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, textAlign: 'center' }}>
-            <Typography variant="h4" color="primary">{dashboardArticles.length}</Typography>
+          <Paper sx={{ p: 2, textAlign: 'center', borderRadius: 2, boxShadow: 2 }}>
+            <Typography variant="h4" color="#3B4F81">{dashboardArticles.length}</Typography>
             <Typography variant="body2">Total Articles</Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, textAlign: 'center' }}>
+          <Paper sx={{ p: 2, textAlign: 'center', borderRadius: 2, boxShadow: 2 }}>
             <Typography variant="h4" color="success.main">
               {dashboardArticles.filter(a => a.status === 'published').length}
             </Typography>
@@ -336,7 +343,7 @@ const DashArticleListPage = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, textAlign: 'center' }}>
+          <Paper sx={{ p: 2, textAlign: 'center', borderRadius: 2, boxShadow: 2 }}>
             <Typography variant="h4" color="warning.main">
               {dashboardArticles.filter(a => a.status === 'draft').length}
             </Typography>
@@ -344,7 +351,7 @@ const DashArticleListPage = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ p: 2, textAlign: 'center' }}>
+          <Paper sx={{ p: 2, textAlign: 'center', borderRadius: 2, boxShadow: 2 }}>
             <Typography variant="h4" color="info.main">
               {new Set(dashboardArticles.map(a => a.category)).size}
             </Typography>
@@ -364,36 +371,39 @@ const DashArticleListPage = () => {
                   display: 'flex', 
                   flexDirection: 'column',
                   transition: 'transform 0.2s, box-shadow 0.2s',
+                  borderRadius: 2,
+                  overflow: 'hidden',
                   '&:hover': {
-                    transform: 'translateY(-2px)',
+                    transform: 'translateY(-4px)',
                     boxShadow: 4
                   }
                 }}
               >
+                <Box sx={{ bgcolor: '#3B4F81', color: 'white', py: 1, px: 2, display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="subtitle1" component="div" sx={{ fontWeight: 500 }}>
+                    {article.title.length > 25 ? article.title.substring(0, 25) + '...' : article.title}
+                  </Typography>
+                  <Chip 
+                    label={article.status} 
+                    size="small" 
+                    color={getStatusColor(article.status)}
+                    sx={{ height: 24 }}
+                  />
+                </Box>
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, pr: 1 }}>
-                      {article.title}
-                    </Typography>
-                    <Chip 
-                      label={article.status} 
-                      size="small" 
-                      color={getStatusColor(article.status)}
-                      variant="outlined"
-                    />
-                  </Box>
-                  
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Name:</strong> {article.name}
+                  <Typography variant="body2" color="text.secondary" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <LinkIcon fontSize="small" /> {article.name}
                   </Typography>
                   
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Category:</strong> {article.category}
+                  <Typography variant="body2" color="text.secondary" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <CategoryIcon fontSize="small" /> {article.category}
                   </Typography>
                   
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     <strong>Author:</strong> {article.author}
                   </Typography>
+
+                  <Divider sx={{ my: 1 }} />
 
                   <Typography variant="body2" sx={{ mt: 1, height: 60, overflow: 'hidden' }}>
                     {article.content[0]?.substring(0, 100)}...
@@ -419,6 +429,7 @@ const DashArticleListPage = () => {
                           size="small" 
                           onClick={() => openModal('edit', article)}
                           title="Edit Article"
+                          color="primary"
                         >
                           <EditIcon />
                         </IconButton>
@@ -436,6 +447,7 @@ const DashArticleListPage = () => {
                   <Button
                     size="small"
                     variant="outlined"
+                    startIcon={<PublicIcon />}
                     onClick={() => navigateToPublicArticle(article.name)}
                   >
                     View Public
@@ -448,18 +460,28 @@ const DashArticleListPage = () => {
       </Grow>
 
       {filteredArticles.length === 0 && (
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-          <ArticleIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
+        <Box sx={{ textAlign: 'center', py: 8, bgcolor: 'white', borderRadius: 2, boxShadow: 1 }}>
+          <ArticleIcon sx={{ fontSize: 64, color: '#3B4F81', opacity: 0.6, mb: 2 }} />
           <Typography variant="h6" color="text.secondary" gutterBottom>
             No articles found
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {search ? 'Try adjusting your search terms' : 'Start by creating your first article'}
           </Typography>
+          {canEdit && !search && (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => openModal('add')}
+              sx={{ bgcolor: '#3B4F81', mt: 2 }}
+            >
+              Add Article
+            </Button>
+          )}
         </Box>
       )}
 
-      {/* Article Modal */}
+      {/* Enhanced Article Modal */}
       <Modal
         open={modalOpen}
         onClose={closeModal}
@@ -482,13 +504,50 @@ const DashArticleListPage = () => {
             overflow: 'auto'
           }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h6">
-                {modalMode === 'view' ? 'View Article' : modalMode === 'edit' ? 'Edit Article' : 'Add New Article'}
+              <Typography variant="h6" component="h2" sx={{ color: '#3B4F81', fontWeight: 600 }}>
+                {modalMode === 'view' ? 'Article Details' : modalMode === 'edit' ? 'Edit Article' : 'Add New Article'}
               </Typography>
-              <IconButton onClick={closeModal}>
+              <IconButton onClick={closeModal} aria-label="close" sx={{ color: 'text.secondary' }}>
                 <CloseIcon />
               </IconButton>
             </Box>
+
+            {selectedArticle && modalMode === 'view' && (
+              <Box sx={{ mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Avatar 
+                    sx={{ 
+                      width: 56, 
+                      height: 56, 
+                      bgcolor: '#3B4F81',
+                      fontSize: '1.5rem'
+                    }}
+                  >
+                    <ArticleIcon />
+                  </Avatar>
+                  <Box sx={{ ml: 2 }}>
+                    <Typography variant="h6">{selectedArticle.title}</Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Chip 
+                        label={selectedArticle.status} 
+                        size="small" 
+                        color={getStatusColor(selectedArticle.status)}
+                      />
+                      <Chip 
+                        label={selectedArticle.category} 
+                        size="small" 
+                        variant="outlined"
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  By {selectedArticle.author} • Last updated {new Date(selectedArticle.updatedAt).toLocaleDateString()}
+                </Typography>
+              </Box>
+            )}
+
+            <Divider sx={{ mb: 3 }} />
 
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
@@ -500,6 +559,14 @@ const DashArticleListPage = () => {
                   onChange={handleInputChange}
                   disabled={modalMode === 'view'}
                   required
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <TitleIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
               
@@ -513,6 +580,14 @@ const DashArticleListPage = () => {
                   disabled={modalMode === 'view'}
                   required
                   helperText="Used in URL: /articles/{name}"
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LinkIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
 
@@ -526,6 +601,14 @@ const DashArticleListPage = () => {
                   onChange={handleInputChange}
                   disabled={modalMode === 'view'}
                   SelectProps={{ native: true }}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CategoryIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 >
                   <option value="general">General</option>
                   <option value="Projects">Projects</option>
@@ -546,6 +629,14 @@ const DashArticleListPage = () => {
                   onChange={handleInputChange}
                   disabled={modalMode === 'view'}
                   SelectProps={{ native: true }}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PublicIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 >
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
@@ -554,19 +645,20 @@ const DashArticleListPage = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Content Items
+                <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <ArticleIcon fontSize="small" /> Content Items
                 </Typography>
                 {formData.content.map((item, index) => (
                   <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
                     <TextField
                       fullWidth
                       multiline
-                      rows={2}
+                      rows={3}
                       label={`Content Item ${index + 1}`}
                       value={item}
                       onChange={(e) => handleContentChange(index, e.target.value)}
                       disabled={modalMode === 'view'}
+                      variant="outlined"
                     />
                     {modalMode !== 'view' && formData.content.length > 1 && (
                       <IconButton 
@@ -585,6 +677,7 @@ const DashArticleListPage = () => {
                     onClick={addContentItem}
                     variant="outlined"
                     size="small"
+                    sx={{ mt: 1 }}
                   >
                     Add Content Item
                   </Button>
@@ -594,16 +687,45 @@ const DashArticleListPage = () => {
 
             {modalMode !== 'view' && (
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
-                <Button onClick={closeModal}>
+                <Button 
+                  onClick={closeModal}
+                  variant="outlined"
+                  startIcon={<CancelIcon />}
+                >
                   Cancel
                 </Button>
                 <Button 
                   variant="contained" 
                   onClick={handleSaveArticle}
-                  sx={{ bgcolor: '#1565c0' }}
+                  startIcon={modalMode === 'edit' ? <SaveIcon /> : <AddIcon />}
+                  sx={{ bgcolor: '#3B4F81' }}
                 >
                   {modalMode === 'edit' ? 'Update Article' : 'Create Article'}
                 </Button>
+              </Box>
+            )}
+
+            {modalMode === 'view' && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
+                <Button 
+                  onClick={closeModal} 
+                  variant="outlined"
+                >
+                  Close
+                </Button>
+                {canEdit && (
+                  <Button 
+                    variant="contained" 
+                    onClick={() => {
+                      closeModal();
+                      openModal('edit', selectedArticle);
+                    }}
+                    startIcon={<EditIcon />}
+                    sx={{ bgcolor: '#3B4F81' }}
+                  >
+                    Edit Article
+                  </Button>
+                )}
               </Box>
             )}
           </Box>

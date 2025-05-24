@@ -22,11 +22,10 @@ import {
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { DataGrid } from '@mui/x-data-grid';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const DashboardPage = () => {
-  const navigate = useNavigate();
-  const email = 'you@example.com';
+  // const navigate = useNavigate();
 
   // 1) Summary Cards
   const statCards = [
@@ -73,9 +72,9 @@ const DashboardPage = () => {
     { field: 'fullName', headerName: 'Full Name', width: 180 },
   ];
 
-  const handleLogout = () => {
-    navigate('/');
-  };
+  // const handleLogout = () => {
+  //   navigate('/');
+  // };
 
   return (
     <Box sx={{ fontFamily: 'Poppins, sans-serif' }}>

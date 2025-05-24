@@ -12,14 +12,26 @@ import {
   Backdrop,
   Fade,
   Alert,
-  Snackbar
+  Snackbar,
+  Divider,
+  Avatar,
+  Chip,
+  InputAdornment,
+  IconButton
 } from '@mui/material';
 import {
   Visibility as ViewIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Add as AddIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  Person as PersonIcon,
+  Email as EmailIcon,
+  CalendarToday as CalendarIcon,
+  Work as WorkIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+  Search as SearchIcon
 } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
@@ -46,6 +58,7 @@ const UsersPage = () => {
   const isAdmin = UserService.isAdmin();
 
   useEffect(() => {
+    // Redirect non-admin users (including editors) to dashboard
     if (!isAdmin) {
       navigate('/dashboard');
       return;
@@ -255,13 +268,25 @@ const UsersPage = () => {
 
   if (!isAdmin) {
     return (
-      <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="h5" color="error">
-          Access Denied
-        </Typography>
-        <Typography>
-          You don't have permission to access this page.
-        </Typography>
+      <Box sx={{ p: 4, textAlign: 'center', bgcolor: '#f4f7fb', minHeight: '100vh' }}>
+        <Paper elevation={3} sx={{ maxWidth: 500, mx: 'auto', p: 4, borderRadius: 2 }}>
+          <Typography variant="h5" color="error" gutterBottom>
+            Access Denied
+          </Typography>
+          <Typography variant="body1" paragraph>
+            You don't have permission to access the User Management page.
+          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            This area is restricted to administrators only.
+          </Typography>
+          <Button 
+            variant="contained" 
+            onClick={() => navigate('/dashboard')}
+            sx={{ bgcolor: '#3B4F81', mt: 2 }}
+          >
+            Return to Dashboard
+          </Button>
+        </Paper>
       </Box>
     );
   }
@@ -278,7 +303,10 @@ const UsersPage = () => {
     >
       {/* Header & Search */}
       <Grid container alignItems="center" justifyContent="space-between" mb={3}>
-        <Typography variant="h5">User Management</Typography>
+        <Typography variant="h5" sx={{ color: '#3B4F81', fontWeight: 600 }}>
+          <PersonIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+          User Management
+        </Typography>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           <TextField
             size="small"
@@ -286,12 +314,19 @@ const UsersPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             sx={{ backgroundColor: '#fff', borderRadius: 1, minWidth: 200 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: 'text.secondary' }} />
+                </InputAdornment>
+              ),
+            }}
           />
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => openModal('add')}
-            sx={{ bgcolor: '#1565c0' }}
+            sx={{ bgcolor: '#3B4F81' }}
           >
             Add User
           </Button>
@@ -311,7 +346,7 @@ const UsersPage = () => {
             disableSelectionOnClick
             sx={{
               '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: '#1565c0',
+                backgroundColor: '#3B4F81',
                 color: 'white',
                 fontSize: '0.95rem'
               },
@@ -329,7 +364,7 @@ const UsersPage = () => {
         </Paper>
       </Grow>
 
-      {/* User Modal */}
+      {/* Enhanced User Modal */}
       <Modal
         open={modalOpen}
         onClose={closeModal}
@@ -345,23 +380,54 @@ const UsersPage = () => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: { xs: '90%', sm: 500 },
+            width: { xs: '95%', sm: '80%', md: 600 },
             bgcolor: 'background.paper',
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
           }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="h6">
-                {modalMode === 'view' ? 'View User' : modalMode === 'edit' ? 'Edit User' : 'Add New User'}
+              <Typography variant="h6" component="h2" sx={{ color: '#3B4F81', fontWeight: 600 }}>
+                {modalMode === 'view' ? 'User Details' : modalMode === 'edit' ? 'Edit User' : 'Add New User'}
               </Typography>
-              <Button onClick={closeModal} sx={{ minWidth: 'auto', p: 1 }}>
+              <IconButton onClick={closeModal} aria-label="close" sx={{ color: 'text.secondary' }}>
                 <CloseIcon />
-              </Button>
+              </IconButton>
             </Box>
 
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
+            {selectedUser && modalMode === 'view' && (
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <Avatar 
+                  sx={{ 
+                    width: 64, 
+                    height: 64, 
+                    bgcolor: '#3B4F81',
+                    fontSize: '1.5rem'
+                  }}
+                >
+                  {selectedUser.fullName?.charAt(0) || 'U'}
+                </Avatar>
+                <Box sx={{ ml: 2 }}>
+                  <Typography variant="h6">{selectedUser.fullName}</Typography>
+                  <Chip 
+                    label={selectedUser.role} 
+                    size="small" 
+                    color={selectedUser.role === 'admin' ? 'error' : selectedUser.role === 'editor' ? 'primary' : 'default'}
+                    sx={{ mr: 1 }}
+                  />
+                  <Chip 
+                    label={selectedUser.isActive ? 'Active' : 'Inactive'} 
+                    size="small" 
+                    color={selectedUser.isActive ? 'success' : 'default'} 
+                  />
+                </Box>
+              </Box>
+            )}
+
+            <Divider sx={{ mb: 3 }} />
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Full Name"
@@ -370,10 +436,18 @@ const UsersPage = () => {
                   onChange={handleInputChange}
                   disabled={modalMode === 'view'}
                   required
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Email"
@@ -383,10 +457,18 @@ const UsersPage = () => {
                   onChange={handleInputChange}
                   disabled={modalMode === 'view' || modalMode === 'edit'} // Email shouldn't be editable
                   required
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   label="Age"
@@ -396,10 +478,18 @@ const UsersPage = () => {
                   onChange={handleInputChange}
                   disabled={modalMode === 'view'}
                   inputProps={{ min: 13, max: 120 }}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CalendarIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   select
@@ -411,6 +501,14 @@ const UsersPage = () => {
                   SelectProps={{
                     native: true,
                   }}
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <WorkIcon sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
                 >
                   <option value="user">User</option>
                   <option value="editor">Editor</option>
@@ -420,20 +518,20 @@ const UsersPage = () => {
 
               {selectedUser && (
                 <>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
                       label="Created At"
                       value={selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : 'N/A'}
                       disabled
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Status"
-                      value={selectedUser.isActive ? 'Active' : 'Inactive'}
-                      disabled
+                      variant="outlined"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <CalendarIcon sx={{ color: 'text.secondary' }} />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                 </>
@@ -441,17 +539,46 @@ const UsersPage = () => {
             </Grid>
 
             {modalMode !== 'view' && (
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-                <Button onClick={closeModal}>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
+                <Button 
+                  onClick={closeModal} 
+                  variant="outlined"
+                  startIcon={<CancelIcon />}
+                >
                   Cancel
                 </Button>
                 <Button 
                   variant="contained" 
                   onClick={handleSaveUser}
-                  sx={{ bgcolor: '#1565c0' }}
+                  startIcon={modalMode === 'edit' ? <SaveIcon /> : <AddIcon />}
+                  sx={{ bgcolor: '#3B4F81' }}
                 >
-                  {modalMode === 'edit' ? 'Update' : 'Create'}
+                  {modalMode === 'edit' ? 'Update User' : 'Create User'}
                 </Button>
+              </Box>
+            )}
+
+            {modalMode === 'view' && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 4 }}>
+                <Button 
+                  onClick={closeModal} 
+                  variant="outlined"
+                >
+                  Close
+                </Button>
+                {isAdmin && selectedUser && selectedUser.id !== currentUser?.id && (
+                  <Button 
+                    variant="contained" 
+                    onClick={() => {
+                      closeModal();
+                      openModal('edit', selectedUser);
+                    }}
+                    startIcon={<EditIcon />}
+                    sx={{ bgcolor: '#3B4F81' }}
+                  >
+                    Edit User
+                  </Button>
+                )}
               </Box>
             )}
           </Box>

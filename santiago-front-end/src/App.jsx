@@ -24,6 +24,7 @@ import LoadingPage from './components/LoadingPage';
 import DashboardPage from './pages/DashboardPages/DashboardPage';
 import ReportsPage from './pages/DashboardPages/ReportsPage';
 import UsersPage from './pages/DashboardPages/UsersPage';
+import DashArticleListPage from './pages/DashboardPages/DashArticleListPage';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
     element: <DashLayout />,
     children: [
       { path: '', element: <DashboardPage /> },
+      { path: 'articles', element: <DashArticleListPage /> },
       { path: 'reports', element: <ReportsPage /> },
       { path: 'users', element: <UsersPage /> },
     ],

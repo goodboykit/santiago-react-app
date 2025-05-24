@@ -18,7 +18,8 @@ import {
   Dashboard as DashboardIcon,
   Assessment as ReportsIcon,
   People as UsersIcon,
-  Logout as LogoutIcon
+  Logout as LogoutIcon,
+  Article as ArticleIcon
 } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -31,6 +32,7 @@ export default function DashLayout() {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+    { text: 'Articles', icon: <ArticleIcon />, path: '/dashboard/articles' },
     { text: 'Reports',   icon: <ReportsIcon />,   path: '/dashboard/reports' },
     { text: 'Users',     icon: <UsersIcon />,     path: '/dashboard/users' },
   ];
@@ -107,8 +109,6 @@ export default function DashLayout() {
       {/* Main Content */}
       <Box
         component="div"
-        onClick={() => navigate(path, { state: { email } })}
-
         sx={{
           flexGrow: 1,
           mt: `${APP_BAR_HEIGHT}px`,
