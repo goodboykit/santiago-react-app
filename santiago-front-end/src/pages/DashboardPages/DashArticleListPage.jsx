@@ -50,7 +50,7 @@ const DashArticleListPage = () => {
     title: '',
     name: '',
     content: [''],
-    category: 'general',
+    category: 'projects',
     status: 'published'
   });
 
@@ -72,7 +72,7 @@ const DashArticleListPage = () => {
           title: 'My Journey as a Developer',
           name: 'journey-as-developer',
           content: ['I started programming when I was 15 years old...', 'My first language was Python...'],
-          category: 'Projects',
+          category: 'projects',
           status: 'published',
           author: 'Kit Santiago',
           createdAt: '2024-01-01T00:00:00.000Z',
@@ -83,7 +83,7 @@ const DashArticleListPage = () => {
           title: 'Web Development Certification',
           name: 'web-dev-certification',
           content: ['I recently completed a comprehensive web development certification...'],
-          category: 'Certifications',
+          category: 'certifications',
           status: 'published',
           author: 'Kit Santiago',
           createdAt: '2024-02-01T00:00:00.000Z',
@@ -94,7 +94,7 @@ const DashArticleListPage = () => {
           title: 'Hackathon Winner 2023',
           name: 'hackathon-winner',
           content: ['Our team won the 2023 regional hackathon with our innovative solution...'],
-          category: 'Achievements',
+          category: 'achievements',
           status: 'published',
           author: 'Kit Santiago',
           createdAt: '2024-03-01T00:00:00.000Z',
@@ -105,7 +105,7 @@ const DashArticleListPage = () => {
           title: 'Upcoming Workshop on React',
           name: 'react-workshop',
           content: ['I will be hosting a workshop on React fundamentals...'],
-          category: 'Events',
+          category: 'community',
           status: 'draft',
           author: 'Kit Santiago',
           createdAt: '2024-04-01T00:00:00.000Z',
@@ -154,7 +154,7 @@ const DashArticleListPage = () => {
         title: '',
         name: '',
         content: [''],
-        category: 'general',
+        category: 'projects',
         status: 'published'
       });
     } else if (article) {
@@ -162,7 +162,7 @@ const DashArticleListPage = () => {
         title: article.title || '',
         name: article.name || '',
         content: article.content || [''],
-        category: article.category || 'general',
+        category: article.category || 'projects',
         status: article.status || 'published'
       });
     }
@@ -177,7 +177,7 @@ const DashArticleListPage = () => {
       title: '',
       name: '',
       content: [''],
-      category: 'general',
+      category: 'projects',
       status: 'published'
     });
   };
@@ -277,9 +277,9 @@ const DashArticleListPage = () => {
     }
   };
 
-  const navigateToPublicArticle = (articleName) => {
-    // Navigate to public article page
-    window.open(`/articles/${articleName}`, '_blank');
+  const navigateToPublicArticle = (article) => {
+    // Navigate to public article page by category
+    window.open(`/articles/${article.category.toLowerCase()}`, '_blank');
   };
 
   return (
@@ -448,7 +448,7 @@ const DashArticleListPage = () => {
                     size="small"
                     variant="outlined"
                     startIcon={<PublicIcon />}
-                    onClick={() => navigateToPublicArticle(article.name)}
+                    onClick={() => navigateToPublicArticle(article)}
                   >
                     View Public
                   </Button>
@@ -611,11 +611,11 @@ const DashArticleListPage = () => {
                   }}
                 >
                   <option value="general">General</option>
-                  <option value="Projects">Projects</option>
-                  <option value="Certifications">Certifications</option>
-                  <option value="Achievements">Achievements</option>
-                  <option value="Community">Community</option>
-                  <option value="Events">Events</option>
+                  <option value="projects">Projects</option>
+                  <option value="certifications">Certifications</option>
+                  <option value="achievements">Achievements</option>
+                  <option value="community">Community</option>
+                  <option value="seminars">Seminars</option>
                 </TextField>
               </Grid>
 
