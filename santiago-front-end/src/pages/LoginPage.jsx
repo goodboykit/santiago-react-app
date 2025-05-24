@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/LoginPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import UserService from '../services/UserService';
 
 import Illustration1 from '../assets/illustration.svg';
 import Illustration2 from '../assets/illustration2.svg';
@@ -15,6 +16,8 @@ function LoginPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   // Image slideshow
   useEffect(() => {
@@ -24,15 +27,40 @@ function LoginPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle login (stub)
-  const handleLogin = (e) => {
-    e.preventDefault();
+  // Check if user is already logged in
+  useEffect(() => {
+    if (UserService.isAuthenticated()) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
 
-    // Placeholder logic — replace with real authentication later
-    if (email && password) {
-        navigate('/loading', { state: { email } });
-    } else {
-      alert('Please enter email and password.');
+  // Handle login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      if (!email || !password) {
+        throw new Error('Please enter email and password.');
+      }
+
+      const response = await UserService.loginUser({ email, password });
+      
+      if (response.success) {
+        // Navigate to loading page with user info
+        navigate('/loading', { 
+          state: { 
+            email: response.data.user.email,
+            userInfo: response.data.user 
+          } 
+        });
+      }
+    } catch (error) {
+      setError(error.message || 'Login failed. Please try again.');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +87,20 @@ function LoginPage() {
           <h2 className="login-title">Welcome Back</h2>
           <p className="login-subtext">Login to continue</p>
 
+          {error && (
+            <div className="error-message" style={{
+              background: '#ffebee',
+              color: '#c62828',
+              padding: '0.75rem',
+              borderRadius: '8px',
+              marginBottom: '1rem',
+              fontSize: '0.9rem',
+              textAlign: 'center'
+            }}>
+              {error}
+            </div>
+          )}
+
           <form className="login-form" onSubmit={handleLogin}>
             <div className="input-wrapper">
               <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
@@ -67,6 +109,7 @@ function LoginPage() {
                 placeholder=" "
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
                 required
               />
               <label>Email Address</label>
@@ -79,12 +122,23 @@ function LoginPage() {
                 placeholder=" "
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
                 required
               />
               <label>Password</label>
             </div>
 
-            <button type="submit" className="btn-login">Login</button>
+            <button 
+              type="submit" 
+              className="btn-login"
+              disabled={loading}
+              style={{
+                opacity: loading ? 0.7 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
 
             <div className="separator"><span>or</span></div>
 
@@ -92,6 +146,7 @@ function LoginPage() {
               type="button"
               className="btn-register"
               onClick={() => navigate('/auth/register')}
+              disabled={loading}
             >
               Create New Account
             </button>
