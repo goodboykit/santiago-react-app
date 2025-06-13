@@ -4,7 +4,8 @@
 const getApiBaseUrl = () => {
   // For production, use the deployed backend URL
   if (import.meta.env.PROD) {
-    return 'https://santiago-react-app-f25a-p2nk12v84-kit-santiagos-projects.vercel.app/api';
+    // Use relative URL to avoid CORS issues
+    return '/api';
   }
   // For development, use the local backend URL
   return 'http://localhost:5000/api';
@@ -23,40 +24,49 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
+// Helper function to handle fetch errors
+const safeFetch = async (url, options = {}) => {
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+      },
+      mode: 'cors'
+    });
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('API request failed:', error);
+    throw new Error(error.message || 'Network request failed');
+  }
+};
+
 // Authentication API calls
 export const authAPI = {
   // Register a new user
   register: async (userData) => {
-    const response = await fetch(`${API_BASE_URL}/users/register`, {
+    return safeFetch(`${API_BASE_URL}/users/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify(userData)
     });
-    return handleResponse(response);
   },
 
   // Login a user
   login: async (credentials) => {
-    const response = await fetch(`${API_BASE_URL}/users/login`, {
+    return safeFetch(`${API_BASE_URL}/users/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify(credentials)
     });
-    return handleResponse(response);
   },
 
   // Get the current user's profile
   getProfile: async (token) => {
-    const response = await fetch(`${API_BASE_URL}/users/profile`, {
+    return safeFetch(`${API_BASE_URL}/users/profile`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
-    return handleResponse(response);
   }
 };
 
@@ -64,14 +74,12 @@ export const authAPI = {
 export const articlesAPI = {
   // Get all articles
   getAllArticles: async () => {
-    const response = await fetch(`${API_BASE_URL}/articles`);
-    return handleResponse(response);
+    return safeFetch(`${API_BASE_URL}/articles`);
   },
 
   // Get a single article by name
   getArticleByName: async (name) => {
-    const response = await fetch(`${API_BASE_URL}/articles/${name}`);
-    return handleResponse(response);
+    return safeFetch(`${API_BASE_URL}/articles/${name}`);
   }
 };
 
