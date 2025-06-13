@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd santiago-front-end && npm install && npm run build",
+  "outputDirectory": "santiago-front-end/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+} 
