@@ -1,0 +1,49 @@
+/* Global styles to fix scrolling issues */
+
+/* Reset */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+}
+
+body {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+}
+
+#root {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+}
+
+/* Layout container */
+.layout-container {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  width: 100% !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Page content */
+.page {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding-bottom: 2rem !important;
+}
+
+/* Fix for mobile */
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem !important;
+  }
+} 
