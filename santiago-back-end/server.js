@@ -133,6 +133,17 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root route - Add this new route
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Santiago Backend API is running',
+    documentation: 'Available endpoints: /api/health, /api/users, /api/articles',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Routes
 app.get('/api/health', (req, res) => {
   res.json({
