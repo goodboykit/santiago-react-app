@@ -87,12 +87,20 @@ class UserService {
   // Login user
   async loginUser(credentials) {
     try {
-      const response = await fetch(`${API_BASE_URL}/users/login`, {
+      // Use fetch directly with the deployed API URL in production
+      const apiUrl = import.meta.env.PROD ? 
+        'https://santiago-react-app-f25a-p2nk12v84-kit-santiagos-projects.vercel.app/api/users/login' :
+        `${API_BASE_URL}/users/login`;
+      
+      console.log(`Logging in with ${apiUrl}`);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(credentials)
+        body: JSON.stringify(credentials),
+        mode: 'cors'
       });
 
       const data = await this.handleResponse(response);

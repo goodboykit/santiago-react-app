@@ -14,8 +14,9 @@ export const DEPLOYED_API_URL = 'https://santiago-react-app-f25a-p2nk12v84-kit-s
 // Override fetch globally to redirect localhost:5001 requests to the correct endpoint
 const originalFetch = window.fetch;
 
-window.fetch = function(url, options) {
+window.fetch = function(url, options = {}) {
   let modifiedUrl = url;
+  let modifiedOptions = { ...options };
   
   // Check if this is a localhost:5001 request and modify it
   if (typeof url === 'string' && url.includes('localhost:5001')) {
@@ -30,8 +31,18 @@ window.fetch = function(url, options) {
     }
   }
   
-  // Call the original fetch with the potentially modified URL
-  return originalFetch(modifiedUrl, options);
+  // Add CORS headers for all API requests
+  if (!modifiedOptions.headers) {
+    modifiedOptions.headers = {};
+  }
+  
+  // Ensure content-type is set properly
+  if (modifiedOptions.body && !modifiedOptions.headers['Content-Type']) {
+    modifiedOptions.headers['Content-Type'] = 'application/json';
+  }
+  
+  // Call the original fetch with the modified URL and options
+  return originalFetch(modifiedUrl, modifiedOptions);
 };
 
 // Export a helper function to get the correct API URL

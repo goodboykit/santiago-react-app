@@ -59,7 +59,7 @@ let articleIdCounter = 2;
 const corsOptions = {
   origin: '*', // Allow all origins temporarily for debugging
   credentials: true,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
@@ -70,6 +70,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Add OPTIONS handling for preflight requests
 app.options('*', cors(corsOptions));
+
+// Special handler for OPTIONS requests
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    console.log('OPTIONS request received');
+    return res.status(204).send();
+  }
+  next();
+});
 
 // Auth middleware
 const protect = (req, res, next) => {
