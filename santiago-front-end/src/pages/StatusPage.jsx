@@ -13,7 +13,7 @@ const StatusPage = () => {
     const checkStatus = async () => {
       // Get backend URL from environment
       const backendUrl = import.meta.env.PROD 
-        ? 'https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api'
+        ? 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api'
         : 'http://localhost:5000/api';
       
       // Check direct connection

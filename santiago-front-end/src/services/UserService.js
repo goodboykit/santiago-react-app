@@ -2,7 +2,7 @@
 const getApiBaseUrl = () => {
   // For production, use the deployed backend URL directly
   if (import.meta.env.PROD) {
-    return 'https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api';
+    return 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api';
   }
   // For development, use the local backend URL
   return 'http://localhost:5000/api';

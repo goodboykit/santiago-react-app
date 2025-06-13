@@ -1,7 +1,7 @@
 {
   "version": 2,
   "env": {
-    "VITE_API_BASE_URL": "https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api"
+    "VITE_API_BASE_URL": "https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api"
   },
   "routes": [
     {

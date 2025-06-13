@@ -5,7 +5,7 @@
  */
 
 // The backend URL - hardcoded for reliability
-const BACKEND_URL = 'https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api';
+const BACKEND_URL = 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api';
 
 // Store auth token and user data in localStorage
 const setAuthToken = (token) => {

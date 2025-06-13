@@ -39,12 +39,13 @@ const Login = () => {
       
       try {
         // If regular login fails, try the direct login method
+        console.log('Attempting direct login to: https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api');
         await directLogin(formData);
         toast.success('Login successful!');
         navigate('/dashboard');
       } catch (directError) {
         console.error('Direct login also failed:', directError);
-        setError('Login failed. Please check your credentials.');
+        setError(`Login failed: ${directError.message}. Check console for details.`);
         toast.error('Login failed. Please check your credentials.');
       }
     } finally {

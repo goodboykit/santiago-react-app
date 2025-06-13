@@ -5,7 +5,7 @@
 
 // The base URL for API requests
 export const API_BASE_URL = import.meta.env.PROD 
-  ? 'https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api'
+  ? 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api'
   : 'http://localhost:5000/api';
 
 // Override fetch globally to redirect localhost:5001 requests to the correct endpoint
@@ -19,7 +19,7 @@ window.fetch = function(url, options = {}) {
   if (typeof url === 'string' && url.includes('localhost:5001')) {
     // Replace with the proper URL
     if (import.meta.env.PROD) {
-      modifiedUrl = url.replace('http://localhost:5001/api', 'https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api');
+      modifiedUrl = url.replace('http://localhost:5001/api', 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api');
       console.log(`[API Redirect] Redirecting ${url} to ${modifiedUrl}`);
     } else {
       modifiedUrl = url.replace('localhost:5001', 'localhost:5000');
@@ -30,10 +30,13 @@ window.fetch = function(url, options = {}) {
   // Also redirect old URLs to the new one
   if (typeof url === 'string' && (
     url.includes('santiago-react-app-f25a-p2nk12v84-kit-santiagos-projects.vercel.app') ||
-    url.includes('santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app')
+    url.includes('santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app') ||
+    url.includes('santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app') ||
+    url.includes('santiago-react-app-dnsafucbp-kit-santiagos-projects.vercel.app') ||
+    url.includes('santiago-react-app-czewe3d2h-kit-santiagos-projects.vercel.app')
   )) {
-    modifiedUrl = url.replace(/santiago-react-app-f25a-(p2nk12v84|5rl877hkh)-kit-santiagos-projects\.vercel\.app/g, 
-                            'santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app');
+    modifiedUrl = url.replace(/santiago-react-app-(f25a-)?[a-z0-9]+-kit-santiagos-projects\.vercel\.app/g, 
+                            'santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app');
     console.log(`[API Redirect] Redirecting ${url} to ${modifiedUrl}`);
   }
   
