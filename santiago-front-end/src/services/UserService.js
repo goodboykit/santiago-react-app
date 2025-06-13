@@ -1,9 +1,8 @@
 // Determine the API base URL based on the environment
 const getApiBaseUrl = () => {
-  // For production, use the deployed backend URL
+  // For production, use the deployed backend URL directly
   if (import.meta.env.PROD) {
-    // Use relative URL to avoid CORS issues
-    return '/api';
+    return 'https://santiago-react-app-f25a-p2nk12v84-kit-santiagos-projects.vercel.app/api';
   }
   // For development, use the local backend URL
   return 'http://localhost:5000/api';
@@ -88,22 +87,28 @@ class UserService {
   async loginUser(credentials) {
     try {
       // Use fetch directly with the deployed API URL in production
-      const apiUrl = import.meta.env.PROD ? 
-        'https://santiago-react-app-f25a-p2nk12v84-kit-santiagos-projects.vercel.app/api/users/login' :
-        `${API_BASE_URL}/users/login`;
+      const apiUrl = `${API_BASE_URL}/users/login`;
       
       console.log(`Logging in with ${apiUrl}`);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify(credentials),
-        mode: 'cors'
+        mode: 'cors',
+        credentials: 'omit'
       });
 
-      const data = await this.handleResponse(response);
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Unknown error');
+        console.error(`Login failed with status ${response.status}: ${errorText}`);
+        throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
       
       if (data.success && data.data) {
         this.setAuthToken(data.data.token);
