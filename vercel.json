@@ -1,6 +1,9 @@
 {
+  "version": 2,
   "buildCommand": "cd santiago-front-end && npm install && npm run build",
   "outputDirectory": "santiago-front-end/dist",
+  "installCommand": "cd santiago-front-end && npm install",
+  "framework": "vite",
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]

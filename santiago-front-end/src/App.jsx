@@ -7,7 +7,7 @@ import DashLayout from './components/DashLayout';
 import AuthLayout from './components/AuthLayout';
 
 // Public Pages
-import HomePage from './pages/LandingPages/HomePage';
+import HomePage from './pages/LandingPages/Homepage';
 import AboutPage from './pages/LandingPages/AboutPage';
 import ArticleListPage from './pages/LandingPages/ArticleListPage';
 import ArticlePage from './pages/LandingPages/ArticlePage';
