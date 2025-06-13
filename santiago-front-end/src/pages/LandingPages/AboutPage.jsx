@@ -1,4 +1,5 @@
 import React from 'react';
+import aboutImage from '../../assets/about.png';
 
 function AboutPage() {
   return (
@@ -6,7 +7,7 @@ function AboutPage() {
       <h1 className="page-title">About Me & Community Work</h1>
       <img
         className="page-image"
-        src="../src/assets/about.png"
+        src={aboutImage}
         alt="About Section"
       />
 

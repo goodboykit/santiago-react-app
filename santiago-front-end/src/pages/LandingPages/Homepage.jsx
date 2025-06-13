@@ -1,4 +1,5 @@
 import React from 'react';
+import homeImage from '../../assets/image1.png';
 
 function HomePage() {
   return (
@@ -10,7 +11,7 @@ function HomePage() {
         </p>
         <img
           className="page-image"
-          src="/src/assets/image1.png"
+          src={homeImage}
           alt="Home Banner"
         />
       </div>
