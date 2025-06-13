@@ -2,8 +2,98 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaExclamationTriangle } from 'react-icons/fa';
 import { directLogin } from '../services/DirectLogin';
+import { getApiBaseUrl } from '../apiConfig';
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    padding: '20px',
+    backgroundColor: '#f5f7fa'
+  },
+  form: {
+    width: '100%',
+    maxWidth: '400px',
+    padding: '30px',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)'
+  },
+  title: {
+    textAlign: 'center',
+    color: '#3B4F81',
+    marginBottom: '20px',
+    fontSize: '1.8rem'
+  },
+  errorMessage: {
+    backgroundColor: '#ffebee',
+    color: '#c62828',
+    padding: '12px',
+    borderRadius: '6px',
+    marginBottom: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    fontSize: '0.9rem'
+  },
+  errorIcon: {
+    marginRight: '8px',
+    color: '#c62828'
+  },
+  formGroup: {
+    marginBottom: '20px'
+  },
+  label: {
+    display: 'block',
+    marginBottom: '8px',
+    color: '#555',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  icon: {
+    marginRight: '8px',
+    color: '#3B4F81'
+  },
+  input: {
+    width: '100%',
+    padding: '12px',
+    border: '1.5px solid #ddd',
+    borderRadius: '6px',
+    fontSize: '1rem',
+    transition: 'border 0.3s',
+    outline: 'none'
+  },
+  button: {
+    width: '100%',
+    padding: '12px',
+    backgroundColor: '#3B4F81',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    fontSize: '1rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s'
+  },
+  buttonDisabled: {
+    opacity: '0.7',
+    cursor: 'not-allowed'
+  },
+  links: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '20px',
+    fontSize: '0.9rem'
+  },
+  link: {
+    color: '#3B4F81',
+    textDecoration: 'none'
+  }
+};
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +102,7 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -39,14 +130,14 @@ const Login = () => {
       
       try {
         // If regular login fails, try the direct login method
-        console.log('Attempting direct login to: https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api');
+        console.log(`Attempting direct login with multiple URLs. Current API URL: ${getApiBaseUrl()}`);
         await directLogin(formData);
         toast.success('Login successful!');
         navigate('/dashboard');
       } catch (directError) {
         console.error('Direct login also failed:', directError);
-        setError(`Login failed: ${directError.message}. Check console for details.`);
-        toast.error('Login failed. Please check your credentials.');
+        setError(`Login failed: ${directError.message}`);
+        toast.error('Login failed. Please check your credentials or network connection.');
       }
     } finally {
       setLoading(false);
@@ -54,15 +145,48 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Log In</h2>
+    <div style={styles.container}>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <h2 style={styles.title}>Log In</h2>
         
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div style={styles.errorMessage}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <FaExclamationTriangle style={styles.errorIcon} />
+              {error}
+            </div>
+            <button 
+              type="button"
+              onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+              style={{ 
+                background: 'none',
+                border: 'none',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                marginTop: '5px',
+                color: '#666',
+                alignSelf: 'flex-start'
+              }}
+            >
+              {showTechnicalDetails ? 'Hide details' : 'Show technical details'}
+            </button>
+            
+            {showTechnicalDetails && (
+              <div style={{ fontSize: '0.8rem', marginTop: '5px', color: '#666' }}>
+                <p>Current API URL: {getApiBaseUrl()}</p>
+                <p>Check browser console for more information.</p>
+                <Link to="/status" style={{ color: '#3B4F81', textDecoration: 'underline' }}>
+                  Go to Status Page
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
         
-        <div className="form-group">
-          <label htmlFor="email">
-            <FaEnvelope /> Email
+        <div style={styles.formGroup}>
+          <label htmlFor="email" style={styles.label}>
+            <FaEnvelope style={styles.icon} /> Email
           </label>
           <input
             type="email"
@@ -71,12 +195,13 @@ const Login = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            style={styles.input}
           />
         </div>
         
-        <div className="form-group">
-          <label htmlFor="password">
-            <FaLock /> Password
+        <div style={styles.formGroup}>
+          <label htmlFor="password" style={styles.label}>
+            <FaLock style={styles.icon} /> Password
           </label>
           <input
             type="password"
@@ -85,15 +210,24 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            style={styles.input}
           />
         </div>
         
-        <button type="submit" disabled={loading}>
+        <button 
+          type="submit" 
+          disabled={loading}
+          style={{
+            ...styles.button,
+            ...(loading ? styles.buttonDisabled : {})
+          }}
+        >
           {loading ? 'Logging in...' : 'Login'}
         </button>
         
-        <div className="links">
-          <Link to="/register">Create an account</Link>
+        <div style={styles.links}>
+          <Link to="/register" style={styles.link}>Create an account</Link>
+          <Link to="/status" style={styles.link}>Check System Status</Link>
         </div>
       </form>
     </div>

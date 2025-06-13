@@ -2,11 +2,31 @@
  * Global API Configuration
  * This file overrides all API endpoints to ensure they point to the correct location
  */
+import { getSuccessfulApiUrl } from './services/DirectLogin';
 
-// The base URL for API requests
-export const API_BASE_URL = import.meta.env.PROD 
-  ? 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api'
-  : 'http://localhost:5000/api';
+// The base URLs to try for API requests in order of preference
+const API_URLS = [
+  'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api',
+  'https://santiago-react-app-f25a.vercel.app/api',
+  'https://santiago-react-app.vercel.app/api'
+];
+
+// Get the API base URL based on environment or previously successful URL
+export const getApiBaseUrl = () => {
+  if (import.meta.env.PROD) {
+    // Try to use a previously successful URL first
+    const successfulUrl = getSuccessfulApiUrl();
+    if (successfulUrl) return successfulUrl;
+    
+    // Otherwise use the first one in our list
+    return API_URLS[0];
+  }
+  // For development, use the local backend URL
+  return 'http://localhost:5000/api';
+};
+
+// Export the base URL
+export const API_BASE_URL = getApiBaseUrl();
 
 // Override fetch globally to redirect localhost:5001 requests to the correct endpoint
 const originalFetch = window.fetch;
@@ -19,7 +39,7 @@ window.fetch = function(url, options = {}) {
   if (typeof url === 'string' && url.includes('localhost:5001')) {
     // Replace with the proper URL
     if (import.meta.env.PROD) {
-      modifiedUrl = url.replace('http://localhost:5001/api', 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api');
+      modifiedUrl = url.replace('http://localhost:5001/api', getApiBaseUrl());
       console.log(`[API Redirect] Redirecting ${url} to ${modifiedUrl}`);
     } else {
       modifiedUrl = url.replace('localhost:5001', 'localhost:5000');
@@ -27,17 +47,15 @@ window.fetch = function(url, options = {}) {
     }
   }
   
-  // Also redirect old URLs to the new one
+  // Also redirect old URLs to the latest one
   if (typeof url === 'string' && (
-    url.includes('santiago-react-app-f25a-p2nk12v84-kit-santiagos-projects.vercel.app') ||
-    url.includes('santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app') ||
-    url.includes('santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app') ||
-    url.includes('santiago-react-app-dnsafucbp-kit-santiagos-projects.vercel.app') ||
-    url.includes('santiago-react-app-czewe3d2h-kit-santiagos-projects.vercel.app')
+    url.includes('vercel.app/api')
   )) {
-    modifiedUrl = url.replace(/santiago-react-app-(f25a-)?[a-z0-9]+-kit-santiagos-projects\.vercel\.app/g, 
-                            'santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app');
-    console.log(`[API Redirect] Redirecting ${url} to ${modifiedUrl}`);
+    // Only replace if it's not already pointing to our current API URL
+    if (!url.includes(getApiBaseUrl())) {
+      modifiedUrl = url.replace(/https:\/santiago-react-app[^/]*\/api/g, getApiBaseUrl());
+      console.log(`[API Redirect] Redirecting ${url} to ${modifiedUrl}`);
+    }
   }
   
   // Add CORS headers for all API requests
@@ -56,22 +74,67 @@ window.fetch = function(url, options = {}) {
   }
   
   // Set credentials to 'omit' for cross-origin requests to avoid CORS preflight issues
-  if (modifiedUrl.includes('santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app')) {
+  if (modifiedUrl.includes('vercel.app')) {
     modifiedOptions.credentials = 'omit';
+    modifiedOptions.mode = 'cors';
   }
   
   // Call the original fetch with the modified URL and options
-  return originalFetch(modifiedUrl, modifiedOptions);
+  return originalFetch(modifiedUrl, modifiedOptions)
+    .catch(error => {
+      // If fetch fails with the current URL, try all other URLs
+      if (import.meta.env.PROD && typeof url === 'string' && url.includes('vercel.app/api')) {
+        console.error(`Fetch failed for ${modifiedUrl}, trying alternate URLs`, error);
+        
+        // Create a queue of URLs to try (excluding the one that just failed)
+        const urlsToTry = API_URLS.filter(apiUrl => !modifiedUrl.includes(apiUrl));
+        
+        // Try each URL in succession
+        const tryNextUrl = (index) => {
+          if (index >= urlsToTry.length) {
+            // If all URLs failed, rethrow the original error
+            console.error('All API URLs failed');
+            throw error;
+          }
+          
+          const nextUrl = urlsToTry[index];
+          const nextModifiedUrl = modifiedUrl.replace(/https:\/santiago-react-app[^/]*\/api/g, nextUrl);
+          
+          console.log(`Trying alternate URL: ${nextModifiedUrl}`);
+          
+          return originalFetch(nextModifiedUrl, modifiedOptions)
+            .then(response => {
+              // If successful, store this URL for future use
+              if (response.ok) {
+                localStorage.setItem('successful_api_url', nextUrl);
+              }
+              return response;
+            })
+            .catch(nextError => {
+              // If this URL also failed, try the next one
+              console.error(`Fetch failed for ${nextModifiedUrl}`, nextError);
+              return tryNextUrl(index + 1);
+            });
+        };
+        
+        // Start trying alternate URLs
+        return tryNextUrl(0);
+      }
+      
+      // If not a production API call or no alternates to try, just throw the error
+      throw error;
+    });
 };
 
 // Export a helper function to get the correct API URL
 export const getApiUrl = (endpoint) => {
   // Remove leading slash if present
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-  return `${API_BASE_URL}/${cleanEndpoint}`;
+  return `${getApiBaseUrl()}/${cleanEndpoint}`;
 };
 
 export default {
   API_BASE_URL,
-  getApiUrl
+  getApiUrl,
+  getApiBaseUrl
 }; 

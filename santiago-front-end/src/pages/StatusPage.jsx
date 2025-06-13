@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getApiBaseUrl } from '../apiConfig';
+
+// All possible backend URLs to check
+const BACKEND_URLS = [
+  'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api',
+  'https://santiago-react-app-f25a.vercel.app/api',
+  'https://santiago-react-app.vercel.app/api',
+  'http://localhost:5000/api'
+];
 
 const StatusPage = () => {
   const [status, setStatus] = useState({
@@ -8,13 +17,15 @@ const StatusPage = () => {
     localStorage: { status: 'checking', message: 'Checking localStorage...' },
     corsPolicy: { status: 'checking', message: 'Checking CORS policy...' }
   });
+
+  const [urlStatus, setUrlStatus] = useState({});
+  const [currentApiUrl, setCurrentApiUrl] = useState(getApiBaseUrl());
   
   useEffect(() => {
     const checkStatus = async () => {
       // Get backend URL from environment
-      const backendUrl = import.meta.env.PROD 
-        ? 'https://santiago-react-app-f25a-klt4kv8hw-kit-santiagos-projects.vercel.app/api'
-        : 'http://localhost:5000/api';
+      const backendUrl = getApiBaseUrl();
+      setCurrentApiUrl(backendUrl);
       
       // Check direct connection
       try {
@@ -163,6 +174,34 @@ const StatusPage = () => {
           }
         }));
       }
+
+      // Check all possible backend URLs
+      const urlStatuses = {};
+      for (const url of BACKEND_URLS) {
+        try {
+          console.log(`Checking URL: ${url}`);
+          const response = await fetch(`${url}/health`, { 
+            mode: 'cors',
+            credentials: 'omit',
+            headers: { 'Accept': 'application/json' },
+            // Short timeout to avoid long waits
+            signal: AbortSignal.timeout(5000)
+          });
+          
+          urlStatuses[url] = {
+            status: response.ok ? 'success' : 'error',
+            message: response.ok 
+              ? 'Connection successful' 
+              : `Failed with status: ${response.status}`
+          };
+        } catch (error) {
+          urlStatuses[url] = {
+            status: 'error',
+            message: `Error: ${error.message}`
+          };
+        }
+      }
+      setUrlStatus(urlStatuses);
     };
     
     checkStatus();
@@ -176,6 +215,12 @@ const StatusPage = () => {
       default: return 'gray';
     }
   };
+
+  const setPreferredUrl = (url) => {
+    localStorage.setItem('successful_api_url', url);
+    setCurrentApiUrl(url);
+    window.location.reload();
+  };
   
   return (
     <div style={{ 
@@ -185,6 +230,17 @@ const StatusPage = () => {
       fontFamily: 'Arial, sans-serif' 
     }}>
       <h1 style={{ marginBottom: '2rem', color: '#333' }}>System Status Check</h1>
+      
+      <div style={{
+        padding: '1rem',
+        marginBottom: '1rem',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        backgroundColor: '#f5f5f5'
+      }}>
+        <h3>Current API URL</h3>
+        <p style={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>{currentApiUrl}</p>
+      </div>
       
       {Object.entries(status).map(([key, value]) => (
         <div key={key} style={{
@@ -210,6 +266,63 @@ const StatusPage = () => {
             {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
           </h3>
           <p style={{ color: '#666' }}>{value.message}</p>
+        </div>
+      ))}
+
+      <h2 style={{ marginTop: '2rem', marginBottom: '1rem', color: '#333' }}>Available Backend URLs</h2>
+      
+      {Object.entries(urlStatus).map(([url, status]) => (
+        <div key={url} style={{
+          padding: '1rem',
+          marginBottom: '1rem',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+          backgroundColor: '#f9f9f9',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '0.5rem'
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: '12px',
+              height: '12px',
+              borderRadius: '50%',
+              backgroundColor: getStatusColor(status.status),
+              marginRight: '8px',
+              flexShrink: 0
+            }}></span>
+            <span style={{ 
+              fontFamily: 'monospace', 
+              wordBreak: 'break-all',
+              fontSize: '0.9rem' 
+            }}>
+              {url}
+            </span>
+          </div>
+          <p style={{ color: '#666', marginBottom: '0.5rem' }}>{status.message}</p>
+          
+          {status.status === 'success' && (
+            <button
+              onClick={() => setPreferredUrl(url)}
+              style={{
+                alignSelf: 'flex-start',
+                padding: '6px 12px',
+                backgroundColor: url === currentApiUrl ? '#d4edda' : '#e2e3e5',
+                color: url === currentApiUrl ? '#155724' : '#383d41',
+                border: '1px solid',
+                borderColor: url === currentApiUrl ? '#c3e6cb' : '#d6d8db',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.8rem'
+              }}
+            >
+              {url === currentApiUrl ? 'Currently Selected' : 'Use This URL'}
+            </button>
+          )}
         </div>
       ))}
       
