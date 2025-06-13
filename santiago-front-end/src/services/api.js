@@ -4,8 +4,8 @@
 const getApiBaseUrl = () => {
   // For production, use the deployed backend URL
   if (import.meta.env.PROD) {
-    // Use relative URL to avoid CORS issues
-    return '/api';
+    // Use the full URL to the backend
+    return 'https://santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app/api';
   }
   // For development, use the local backend URL
   return 'http://localhost:5000/api';

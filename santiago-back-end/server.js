@@ -742,6 +742,14 @@ app.use('*', (req, res) => {
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT} (In-Memory Mode)`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+  
+  // Show different URLs based on environment
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`🔗 Deployed at: https://santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app`);
+    console.log(`🔗 Health check: https://santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app/api/health`);
+  } else {
+    console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+  }
+  
   console.log(`⚡ No MongoDB required - using in-memory storage`);
 }); 
