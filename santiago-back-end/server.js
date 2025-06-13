@@ -46,7 +46,14 @@ let articleIdCounter = 2;
 
 // CORS configuration
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173'],
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:5173', 
+    'http://localhost:5174', 
+    'http://127.0.0.1:5173',
+    'https://santiago-react-app-git-master-kit-santiagos-projects.vercel.app',
+    'https://santiago-react-app.vercel.app'
+  ],
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

@@ -56,6 +56,37 @@ Production mode:
 npm start
 ```
 
+## Deploying to Vercel
+
+### Step 1: Create a vercel.json file
+Create a `vercel.json` file in the root directory with the following content:
+```json
+{
+  "version": 2,
+  "name": "santiago-backend",
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ]
+}
+```
+
+### Step 2: Set up Environment Variables
+In the Vercel dashboard, set up the following environment variables:
+- `JWT_SECRET`: A secure random string for JWT authentication
+- `NODE_ENV`: Set to "production"
+
+### Step 3: Deploy
+Connect your GitHub repository to Vercel and deploy.
+
 ## Default Admin User
 
 The server comes with a pre-configured admin user:
