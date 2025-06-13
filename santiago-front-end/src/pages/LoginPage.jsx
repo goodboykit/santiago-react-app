@@ -4,6 +4,7 @@ import '../styles/LoginPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import UserService from '../services/UserService';
+import { directLogin } from '../services/DirectLogin';
 
 import Illustration1 from '../assets/illustration.svg';
 import Illustration2 from '../assets/illustration2.svg';
@@ -14,8 +15,8 @@ const illustrations = [Illustration1, Illustration2, Illustration3];
 function LoginPage() {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test.user@example.com'); // Pre-filled for testing
+  const [password, setPassword] = useState('test123!'); // Pre-filled for testing
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -34,6 +35,25 @@ function LoginPage() {
     }
   }, [navigate]);
 
+  // Auto-login for testing (will run once after component mounts)
+  useEffect(() => {
+    const autoLogin = async () => {
+      try {
+        console.log('Auto-login enabled for testing');
+        await handleLogin({
+          preventDefault: () => {}
+        });
+      } catch (error) {
+        console.error('Auto-login failed:', error);
+      }
+    };
+
+    // Only run auto-login in production for testing
+    if (import.meta.env.PROD && !UserService.isAuthenticated()) {
+      autoLogin();
+    }
+  }, []);
+
   // Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -45,16 +65,37 @@ function LoginPage() {
         throw new Error('Please enter email and password.');
       }
 
-      const response = await UserService.loginUser({ email, password });
-      
-      if (response.success) {
-        // Navigate to loading page with user info
-        navigate('/loading', { 
-          state: { 
-            email: response.data.user.email,
-            userInfo: response.data.user 
-          } 
-        });
+      try {
+        // Try regular login first
+        console.log('Attempting regular login via UserService');
+        const response = await UserService.loginUser({ email, password });
+        
+        if (response.success) {
+          // Navigate to loading page with user info
+          navigate('/loading', { 
+            state: { 
+              email: response.data.user.email,
+              userInfo: response.data.user 
+            } 
+          });
+        }
+      } catch (loginError) {
+        console.error('Regular login failed, attempting direct login:', loginError);
+        
+        // If regular login fails, try direct login
+        const directResponse = await directLogin({ email, password });
+        
+        if (directResponse.success) {
+          console.log('Direct login successful');
+          navigate('/loading', { 
+            state: { 
+              email: directResponse.data.user.email,
+              userInfo: directResponse.data.user 
+            } 
+          });
+        } else {
+          throw new Error('Login failed. Please try again.');
+        }
       }
     } catch (error) {
       setError(error.message || 'Login failed. Please try again.');

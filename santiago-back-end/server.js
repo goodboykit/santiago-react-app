@@ -64,6 +64,22 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+// Logging middleware for all requests to help debug
+app.use((req, res, next) => {
+  // Log all requests
+  console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
+  console.log('Headers:', JSON.stringify(req.headers));
+  
+  // Custom response logging
+  const originalEnd = res.end;
+  res.end = function(...args) {
+    console.log(`Response: ${res.statusCode} ${res.statusMessage || ''}`);
+    originalEnd.apply(res, args);
+  };
+  
+  next();
+});
+
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -75,6 +91,16 @@ app.options('*', cors(corsOptions));
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     console.log('OPTIONS request received');
+    console.log('Origin:', req.headers.origin);
+    console.log('Access-Control-Request-Method:', req.headers['access-control-request-method']);
+    console.log('Access-Control-Request-Headers:', req.headers['access-control-request-headers']);
+    
+    // Set CORS headers for preflight requests
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Max-Age', '86400'); // 24 hours
+    
     return res.status(204).send();
   }
   next();
@@ -745,8 +771,8 @@ app.listen(PORT, () => {
   
   // Show different URLs based on environment
   if (process.env.NODE_ENV === 'production') {
-    console.log(`🔗 Deployed at: https://santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app`);
-    console.log(`🔗 Health check: https://santiago-react-app-f25a-5rl877hkh-kit-santiagos-projects.vercel.app/api/health`);
+    console.log(`🔗 Deployed at: https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app`);
+    console.log(`🔗 Health check: https://santiago-react-app-f25a-kewd64qde-kit-santiagos-projects.vercel.app/api/health`);
   } else {
     console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
   }
