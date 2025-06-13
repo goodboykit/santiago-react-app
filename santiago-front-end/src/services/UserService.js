@@ -1,4 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+// Determine the API base URL based on the environment
+const getApiBaseUrl = () => {
+  // For production, use the deployed backend URL
+  if (import.meta.env.PROD) {
+    // Use relative URL to avoid CORS issues
+    return '/api';
+  }
+  // For development, use the local backend URL
+  return 'http://localhost:5000/api';
+};
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || getApiBaseUrl();
 
 class UserService {
   // Get auth token from localStorage

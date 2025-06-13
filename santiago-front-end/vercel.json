@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "env": {
+    "VITE_API_BASE_URL": "/api"
+  },
   "routes": [
     {
       "src": "/api/(.*)",
