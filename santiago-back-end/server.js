@@ -19,6 +19,17 @@ let users = [
     age: 25,
     isActive: true,
     createdAt: new Date().toISOString()
+  },
+  {
+    id: 2,
+    fullName: 'Test User',
+    email: 'test.user@example.com',
+    // Plain text password: test123!
+    password: 'test123!',
+    role: 'user',
+    age: 22,
+    isActive: true,
+    createdAt: new Date().toISOString()
   }
 ];
 
@@ -41,7 +52,7 @@ let articles = [
   }
 ];
 
-let userIdCounter = 2;
+let userIdCounter = 3;
 let articleIdCounter = 2;
 
 // CORS configuration
@@ -234,7 +245,17 @@ app.post('/api/users/login', async (req, res) => {
       });
     }
 
-    const isPasswordValid = await comparePassword(password, user.password);
+    let isPasswordValid;
+    
+    // Check if the password is a bcrypt hash (starts with $2a$, $2b$, or $2y$)
+    if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$') || user.password.startsWith('$2y$')) {
+      // For hashed passwords, use bcrypt compare
+      isPasswordValid = await comparePassword(password, user.password);
+    } else {
+      // For plaintext passwords, use direct comparison (for testing only)
+      isPasswordValid = password === user.password;
+    }
+
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
